@@ -13,6 +13,7 @@ unsigned int checkSum;
 unsigned int compressionScheme;
 unsigned int trafficClass;
 
+unsigned int getAbsoluteUsingTwosComp(int num);
 void decomposePayload(unsigned char packet[], int* payload, int payloadLength);
 int getPayloadLength(unsigned char packet[]);
 void decomposeHeader(unsigned char packet[]);
@@ -194,6 +195,39 @@ void print_packet_sf(unsigned char packet[]){
    
 }
 
+unsigned int getAbsoluteUsingTwosComp(int num){
+    unsigned int stdout = (unsigned int) num;
+    unsigned int temp = 0; 
+    temp = stdout & 0x1;
+    stdout =~ stdout; 
+    stdout |=  temp;
+
+    return stdout; 
+}
+
+unsigned int compute_checksum_sf(unsigned char packet[]){
+    int pktLen = (int) getPacketLength(packet);
+    int payLoadLength = getPayloadLength(packet);
+    int payload[payLoadLength]; 
+    decomposeHeader(packet);
+    decomposePayload (packet, payload, payLoadLength);
+    unsigned int sum = 0; 
+
+    sum = sourceAddress + destinationAddress + sourcePort + destinationPort + 
+          fragmentOffset + packetLength + maxHopCount + compressionScheme +
+          trafficClass;
+
+    for (int i = 0 ; i < payLoadLength ; i++){
+        if(payload[i] < 0){
+            sum += getAbsoluteUsingTwosComp(payload[i]);
+        }
+        else{
+            sum += payload[i];
+        }     
+    }
+    return sum % 8388607 ;
+}
+
 
 int main() {
     unsigned char packet[] = { 0x01, 0xd2, 0x08, 0xa0, 0xb4, 0x11, 0xaa, 0xcd, 
@@ -201,12 +235,13 @@ int main() {
                                0x00, 0x84, 0x5f, 0xed,
                                0xff, 0xff, 0x66, 0x8f, 
                                0x05, 0x88, 0x81, 0x92,};
-    int pktLen = (int) getPacketLength(packet);
-    int payLoadLength = getPayloadLength(packet);
-    int payload[payLoadLength]; 
-    decomposeHeader(packet);
-    decomposePayload (packet, payload, payLoadLength);
-    print_packet_sf(packet);
+    // int pktLen = (int) getPacketLength(packet);
+    // int payLoadLength = getPayloadLength(packet);
+    // int payload[payLoadLength]; 
+    // decomposeHeader(packet);
+    // decomposePayload (packet, payload, payLoadLength);
+    // print_packet_sf(packet);
+    printf("Checksum is: %u\n", compute_checksum_sf(packet));
 
     return 0;
 }

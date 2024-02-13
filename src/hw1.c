@@ -19,6 +19,8 @@ int getPayloadLength(unsigned char packet[]);
 void decomposeHeader(unsigned char packet[]);
 unsigned int getPacketLength(unsigned char packet[]);
 void print_packet_sf(unsigned char packet[]);
+unsigned int compute_checksum_sf(unsigned char packet[]);
+unsigned int getAbsoluteUsingTwosComp(int num);
 
 int getPayloadLength(unsigned char packet[]){
     int pktLen = (int) getPacketLength(packet); 
@@ -201,11 +203,37 @@ void print_packet_sf(unsigned char packet[]){
    
 }
 
+unsigned int getAbsoluteUsingTwosComp(int num){
+    unsigned int stdout = (unsigned int) num;
+    unsigned int temp = 0; 
+    temp = stdout & 0x1;
+    stdout =~ stdout; 
+    stdout |=  temp;
 
-unsigned int compute_checksum_sf(unsigned char packet[])
-{
-    (void)packet;
-    return -1;
+    return stdout; 
+}
+
+unsigned int compute_checksum_sf(unsigned char packet[]){
+    int pktLen = (int) getPacketLength(packet);
+    int payLoadLength = getPayloadLength(packet);
+    int payload[payLoadLength]; 
+    decomposeHeader(packet);
+    decomposePayload (packet, payload, payLoadLength);
+    unsigned int sum = 0; 
+
+    sum = sourceAddress + destinationAddress + sourcePort + destinationPort + 
+          fragmentOffset + packetLength + maxHopCount + compressionScheme +
+          trafficClass;
+
+    for (int i = 0 ; i < payLoadLength ; i++){
+        if(payload[i] < 0){
+            sum += getAbsoluteUsingTwosComp(payload[i]);
+        }
+        else{
+            sum += payload[i];
+        }     
+    }
+    return sum % 8388607 ;
 }
 
 unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
@@ -219,8 +247,7 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
 unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned char *packets[], unsigned int packets_len,
                           unsigned int max_payload, unsigned int src_addr, unsigned int dest_addr,
                           unsigned int src_port, unsigned int dest_port, unsigned int maximum_hop_count,
-                          unsigned int compression_scheme, unsigned int traffic_class)
-{
+                          unsigned int compression_scheme, unsigned int traffic_class){
     (void)array;
     (void)array_len;
     (void)packets;
