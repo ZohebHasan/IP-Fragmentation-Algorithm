@@ -218,11 +218,12 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
           trafficClass;
 
     for (int i = 0 ; i < payLoadLength ; i++){
-        if(payload[i] <= 0){
+    
+        if(payload[i] < 0){
             sum += getAbsoluteUsingTwosComp(payload[i]);
         }
         else{
-            sum += payload[i];
+            sum += (unsigned int) payload[i];
         }     
     }
     return sum % 8388607 ;
