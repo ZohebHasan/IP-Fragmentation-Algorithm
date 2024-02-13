@@ -26,10 +26,9 @@ int getPayloadLength(unsigned char packet[]){
     return ((int) ((val) / 4)) + (val % 4 != 0); 
 }  
 
-
 unsigned int getPacketLength(unsigned char packet[]){
-    unsigned int temp = 0;
 
+    unsigned int temp = 0;
     for(int i = 9; i < 12; i++){
         if(i == 9){
             temp |= (unsigned int) (packet[i] & 0x03); 
@@ -49,7 +48,6 @@ unsigned int getPacketLength(unsigned char packet[]){
 
     return packetLength;
 }
-
 
 void decomposeHeader(unsigned char packet[]){ 
     getPacketLength(packet);
@@ -142,7 +140,6 @@ void decomposeHeader(unsigned char packet[]){
     }
  }
 
-
 void decomposePayload(unsigned char packet[], int* payload, int payloadLength){
     unsigned int temp = 0; 
     int pktLen = (int) getPacketLength(packet);
@@ -230,6 +227,37 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
 }
 
 
+unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
+
+    unsigned int payloadCount = 0;
+    for(unsigned int i = 0; i < packets_len; i++){
+        int pktLen = (int) getPacketLength(packets[i]);
+        int payLoadLength = getPayloadLength(packets[i]);
+        int payload[payLoadLength]; 
+        decomposeHeader(packets[i]);
+        decomposePayload (packets[i], payload, payLoadLength);
+        if(compute_checksum_sf(packets[i]) == checkSum){
+            unsigned int j = fragmentOffset / 4;
+            int k = 0;
+            while(j < array_len && k < payLoadLength){
+                array[j] = payload[k];
+                j++;
+                k++;   
+                payloadCount++;   
+            }
+        }
+        else{
+            continue;
+        }
+    }
+    return payloadCount;
+}
+
+
+
+
+
+
 int main() {
     unsigned char packet[] = { 0x01, 0xd2, 0x08, 0xa0, 0xb4, 0x11, 0xaa, 0xcd, 
                                0x00, 0x00, 0x01, 0xca, 0xde, 0xad, 0xb1, 0xf3, 
@@ -242,7 +270,10 @@ int main() {
     // decomposeHeader(packet);
     // decomposePayload (packet, payload, payLoadLength);
     // print_packet_sf(packet);
-    printf("Checksum is: %u\n", compute_checksum_sf(packet));
+    // printf("Checksum is: %u\n", compute_checksum_sf(packet));
+
+
+
 
     return 0;
 }

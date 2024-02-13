@@ -28,7 +28,6 @@ int getPayloadLength(unsigned char packet[]){
     return ((int) ((val) / 4)) + (val % 4 != 0); 
 }  
 
-
 unsigned int getPacketLength(unsigned char packet[]){
     unsigned int temp = 0;
 
@@ -51,7 +50,6 @@ unsigned int getPacketLength(unsigned char packet[]){
 
     return packetLength;
 }
-
 
 void decomposeHeader(unsigned char packet[]){ 
     getPacketLength(packet);
@@ -144,7 +142,6 @@ void decomposeHeader(unsigned char packet[]){
     }
  }
 
-
 void decomposePayload(unsigned char packet[], int* payload, int payloadLength){
     unsigned int temp = 0; 
     int pktLen = (int) getPacketLength(packet);
@@ -169,7 +166,6 @@ void decomposePayload(unsigned char packet[], int* payload, int payloadLength){
         }
     }
 }
-
 
 void print_packet_sf(unsigned char packet[]){
 
@@ -237,11 +233,29 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
 }
 
 unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
-    (void)packets;
-    (void)packets_len;
-    (void)array;
-    (void)array_len;
-    return -1;
+
+    unsigned int payloadCount = 0;
+    for(unsigned int i = 0; i < packets_len; i++){
+        int pktLen = (int) getPacketLength(packets[i]);
+        int payLoadLength = getPayloadLength(packets[i]);
+        int payload[payLoadLength]; 
+        decomposeHeader(packets[i]);
+        decomposePayload (packets[i], payload, payLoadLength);
+        if(compute_checksum_sf(packets[i]) == checkSum){
+            unsigned int j = fragmentOffset / 4;
+            int k = 0;
+            while(j < array_len && k < payLoadLength){
+                array[j] = payload[k];
+                j++;
+                k++;   
+                payloadCount++;   
+            }
+        }
+        else{
+            continue;
+        }
+    }
+    return payloadCount;
 }
 
 unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned char *packets[], unsigned int packets_len,
