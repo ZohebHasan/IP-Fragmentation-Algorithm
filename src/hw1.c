@@ -183,8 +183,8 @@ void print_packet_sf(unsigned char packet[]){
     printf("Destination Port: %u\n", destinationPort); 
     printf("Fragment Offset: %u\n", fragmentOffset); 
     printf("Packet Length: %u\n", packetLength); 
-    printf("Max Hop Count: %u\n", maxHopCount); 
-    printf("CheckSum: %u\n", checkSum); 
+    printf("Maximum Hop Count: %u\n", maxHopCount); 
+    printf("Check sum: %u\n", checkSum); 
     printf("Compression Scheme: %u\n", compressionScheme); 
     printf("Traffic Class: %u\n", trafficClass);   
 
