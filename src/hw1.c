@@ -184,13 +184,18 @@ void print_packet_sf(unsigned char packet[]){
     printf("Fragment Offset: %u\n", fragmentOffset); 
     printf("Packet Length: %u\n", packetLength); 
     printf("Maximum Hop Count: %u\n", maxHopCount); 
-    printf("Check sum: %u\n", checkSum); 
+    printf("Checksum: %u\n", checkSum); 
     printf("Compression Scheme: %u\n", compressionScheme); 
     printf("Traffic Class: %u\n", trafficClass);   
 
     printf("Payload: "); 
     for(int i = 0; i < payLoadLength; i++){
-        printf("%d ", payload[i]);
+        if( i == payLoadLength - 1){
+            printf("%d", payload[i]);
+        }
+        else{
+            printf("%d ", payload[i]);
+        }    
     }
     printf("\n"); 
    
