@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "hw1.h": "c"
+        "hw1.h": "c",
+        "array": "c",
+        "random": "c"
     }
 }
