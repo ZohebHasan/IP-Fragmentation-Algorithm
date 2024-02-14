@@ -278,12 +278,12 @@ for(int i = 0; i < packets_len; i++){
         sixInts = 1;
 
     }
-    for(int k = 0; k < pktlen - 1 ; k++){
+    for(int k = 0; k < pktlen  ; k++){
         packets[i][k] = (unsigned char) 0;
     }
 
     byteCount = 0; 
-    for(int j = pktlen - 1; j > 0; j--){
+    for(int j = pktlen - 1; j >= 0; j--){
         if( j > 15){
             packets[i][j] |= (array[fragOffset] >> shift);
             byteCount++; 
