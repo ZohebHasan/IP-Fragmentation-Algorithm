@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 // #include "hw1.h"
 
 
@@ -257,7 +258,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
                           unsigned int src_port, unsigned int dest_port, unsigned int maximum_hop_count,
                           unsigned int compression_scheme, unsigned int traffic_class){
 unsigned int packetNum = 0; 
-packets[packets_len];
+// packets[packets_len];
 int remainingIntegers = (int) max_payload;
 int pktlen = 0; 
 int shift = 0;
@@ -361,7 +362,9 @@ for(int i = 0; i < packets_len; i++){
             shift += 8;
         }   
     }
+    
     packetNum++; 
+    free(packets[i]);
 }
 return packetNum; 
 }
@@ -395,8 +398,10 @@ int main() {
     unsigned int compression_scheme = 3;
     unsigned int traffic_class = 14;
     packetize_array_sf(array, array_len, packets, packets_len, max_payload, src_addr, dest_addr, src_port, dest_port, maximum_hop_count, compression_scheme, traffic_class);
-
-
+    for(int i = 0; i < packets_len; i++){
+        printf("Starting from here: \n");
+        print_packet_sf(packets[i]);
+    }
 
     return 0;
 }
