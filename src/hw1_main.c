@@ -226,7 +226,6 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
     return sum % 8388607 ;
 }
 
-
 unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
 
     unsigned int payloadCount = 0;
@@ -253,17 +252,127 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
     return payloadCount;
 }
 
+unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned char *packets[], unsigned int packets_len,
+                          unsigned int max_payload, unsigned int src_addr, unsigned int dest_addr,
+                          unsigned int src_port, unsigned int dest_port, unsigned int maximum_hop_count,
+                          unsigned int compression_scheme, unsigned int traffic_class){
+unsigned int packetNum = 0; 
+packets[packets_len];
+int remainingIntegers = (int) max_payload;
+int pktlen = 0; 
+int shift = 0;
+int sixInts = 0;
+int byteCount = 0;
+unsigned int chckSum = 0;
+unsigned int fragOffset = 0;
+for(int i = 0; i < packets_len; i++){
+    if( remainingIntegers < 6){
+        pktlen = (16 + (remainingIntegers * 4));
+        packets[i] = malloc(pktlen);
+    }
+    else{
+        pktlen = (16 + (6 * 4));
+        packets[i] = malloc(pktlen);
+        remainingIntegers -= 6;
+        sixInts = 1;
 
+    }
+    for(int k = 0; k < pktlen - 1 ; k++){
+        packets[i][k] = (unsigned char) 0;
+    }
 
-
+    byteCount = 0; 
+    for(int j = pktlen - 1; j > 0; j--){
+        if( j > 15){
+            packets[i][j] |= (array[fragOffset] >> shift);
+            byteCount++; 
+            if(byteCount == 3){
+                shift = 0;
+                fragOffset++;
+                if(array[fragOffset] < 0){
+                    chckSum += getAbsoluteUsingTwosComp(array[fragOffset]);
+                }
+                else{
+                    chckSum += array[fragOffset];
+                }
+            }
+            else{
+                 shift+= 8;
+            }
+        }
+        if( j == 15){
+            shift = 0; 
+            packets[i][j] |= traffic_class;
+            packets[i][j] |= ((compression_scheme) << 6);    
+        }
+        else if( j == 14){
+            if(sixInts){
+                fragOffset = ((fragOffset - 6) * 4);
+            }
+            else{
+                fragOffset = ((fragOffset - remainingIntegers) * 4);
+            }
+            chckSum += (src_addr + dest_addr + src_port + dest_port + (unsigned int) fragOffset + (unsigned int) pktlen + 
+                        maximum_hop_count + compression_scheme + traffic_class);
+     
+            chckSum %= 8388607;
+            packets[i][j] |= chckSum >> shift; 
+            shift += 8;
+        }
+        else if(j > 12){
+            packets[i][j] |= chckSum >> shift; 
+            shift += 8;
+        }
+        else if(j == 12){
+            shift = 0;
+            packets[i][j] |= chckSum >> 17;
+            packets[i][j] |= ((maximum_hop_count) << 7);
+        }
+        else if(j == 11){
+            packets[i][j] |= ((maximum_hop_count) >> 1); 
+            packets[i][j] |= ((pktlen) << 4);
+        }
+        else if(j == 10){
+            packets[i][j] |= ((pktlen) >> 4);
+        }
+        else if(j == 9){
+            packets[i][j] |= ((pktlen) >> 4);
+           
+            packets[i][j] |= (fragOffset >> 2 ); 
+        }
+        else if(j == 8){
+            packets[i][j] |= (fragOffset >> 8 ); 
+        }
+        else if(j == 7){
+            packets[i][j] |= dest_port;
+            packets[i][j] |= ((src_port) << 4); 
+        }      
+        else if(j > 3){
+            packets[i][j] |= ((dest_addr) >> shift);
+            shift += 8;
+        }
+        else if( j == 3){
+            packets[i][j] |= ((dest_addr) >> 24);
+            packets[i][j] |= ((src_addr) << 4);
+            shift = 4;
+        }
+        else{
+            packets[i][j] |= ((src_addr) >> shift);
+            shift += 8;
+        }   
+    }
+    packetNum++; 
+}
+return packetNum; 
+}
 
 
 int main() {
-    unsigned char packet[] = { 0x01, 0xd2, 0x08, 0xa0, 0xb4, 0x11, 0xaa, 0xcd, 
-                               0x00, 0x00, 0x01, 0xca, 0xde, 0xad, 0xb1, 0xf3, 
-                               0x00, 0x84, 0x5f, 0xed,
-                               0xff, 0xff, 0x66, 0x8f, 
-                               0x05, 0x88, 0x81, 0x92,};
+    // unsigned char packet[] = { 0x01, 0xd2, 0x08, 0xa0, 0xb4, 0x11, 0xaa, 0xcd, 
+    //                            0x00, 0x00, 0x01, 0xca, 0xde, 0xad, 0xb1, 0xf3, 
+    //                            0x00, 0x84, 0x5f, 0xed,
+    //                            0xff, 0xff, 0x66, 0x8f, 
+    //                            0x05, 0x88, 0x81, 0x92,};
     // int pktLen = (int) getPacketLength(packet);
     // int payLoadLength = getPayloadLength(packet);
     // int payload[payLoadLength]; 
@@ -271,7 +380,21 @@ int main() {
     // decomposePayload (packet, payload, payLoadLength);
     // print_packet_sf(packet);
     // printf("Checksum is: %u\n", compute_checksum_sf(packet));
-
+    int array[] = {17, 89, 42, 631, 52, 77, 89, 100, 125, -6, 823, 
+	800, 1024, 1025, 9, 1888, 0, -17, 19, 9999999, -888888, 
+	723, 1000, 1111, -99, -95, 55, };
+    unsigned int array_len = 22;
+    unsigned char* packets[4];
+    unsigned int packets_len = 4;
+    unsigned int max_payload = 20;
+    unsigned int src_addr = 93737;
+    unsigned int dest_addr = 10973;
+    unsigned int src_port = 11;
+    unsigned int dest_port = 6;
+    unsigned int maximum_hop_count = 25;
+    unsigned int compression_scheme = 3;
+    unsigned int traffic_class = 14;
+    packetize_array_sf(array, array_len, packets, packets_len, max_payload, src_addr, dest_addr, src_port, dest_port, maximum_hop_count, compression_scheme, traffic_class);
 
 
 
