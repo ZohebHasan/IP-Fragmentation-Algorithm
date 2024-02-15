@@ -3,6 +3,7 @@
         "hw1.h": "c",
         "array": "c",
         "random": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "packetize_array_sf_args01.h": "c"
     }
 }
