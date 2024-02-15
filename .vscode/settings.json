@@ -2,6 +2,7 @@
     "files.associations": {
         "hw1.h": "c",
         "array": "c",
-        "random": "c"
+        "random": "c",
+        "stdio.h": "c"
     }
 }

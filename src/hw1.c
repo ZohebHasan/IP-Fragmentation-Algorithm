@@ -1,5 +1,6 @@
 #include "hw1.h"
-
+// #include <stdio.h>
+// #include <stdlib.h>
 
 //Global Variable Declarations 
 unsigned int sourceAddress; 
@@ -392,3 +393,64 @@ for(int i = 0; i < packets_len ; i++){
 }
 
 
+// int main() {
+
+//     //Testing Of Print Packet, PacketLength, PayloadLength, Packetize and checksum ---> Functional
+//     // TESTCASE 1: PASSED
+
+//     int array[] = {17, 89, 42, 631, 52, 77, 89, 100, 125, -6, 823, 
+// 	800, 1024, 1025, 9, 1888, 0, -17, 19, 9999999, -888888, 
+// 	723, 1000, 1111, -99, -95, 55, };
+//     unsigned int array_len = 22;
+//     unsigned char* packets[4];
+//     unsigned int packets_len = 4;
+//     unsigned int max_payload = 20;
+//     unsigned int src_addr = 93737;
+//     unsigned int dest_addr = 10973;
+//     unsigned int src_port = 11;
+//     unsigned int dest_port = 6;
+//     unsigned int maximum_hop_count = 25;
+//     unsigned int compression_scheme = 3;
+//     unsigned int traffic_class = 14;
+//     printf("Num of packets return value: %u\n", packetize_array_sf(array, array_len, packets, packets_len, max_payload, src_addr, dest_addr, src_port, dest_port, maximum_hop_count, compression_scheme, traffic_class));
+//     // printf("Starting from here: \n");
+//     // for(int i = 0; i < packets_len; i++){
+//     //     printf("\n");
+//     //     print_packet_sf(packets[i]);
+//     //     printf("Checksum of each packet: %u\n", compute_checksum_sf(packets[i])); 
+//     // }
+
+//     // Testing Of Packetize Array ---> Not Functional
+//     // TESTCASE 2: Undefined
+    
+
+//     // unsigned char *packets[] = {
+//     //         "\x00\x1e\x0f\x32\x0e\xf4\x86\xcd\x00\x80\x02\x07\x10\xd6\x41\x0f\x00\x00\x00\x12\x00\x00\x00\x13\x00\x00\x00\x14\x00\x00\x00\x15",
+//     //         "\x00\x1e\x0f\x32\x0e\xf4\x86\xcd\x00\x40\x02\x07\x10\xd6\x21\x0f\x00\x00\x00\x0e\x00\x00\x00\x0f\x00\x00\x00\x10\x00\x00\x00\x11",
+//     //         "\x00\x1e\x0f\x32\x0e\xf4\x86\xcd\x00\x00\x02\x07\x10\xd6\x01\x0f\x00\x00\x00\x0a\x00\x00\x00\x0b\x00\x00\x00\x0c\x00\x00\x00\x0d",};
+            
+//     // int reconstructed_array[] = {675349907, 997962218, 2021193812, 340631633, 909996593, 1092143830, 790789736, 1741697497, 82837431, 1075282486, 2109128536, 962800887, };
+//     // int expected_array[] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, };
+//     // int size = sizeof(reconstructed_array) / sizeof(reconstructed_array[0]);
+//     // // unsigned int expected_num_elements = 12;
+//     // unsigned int numPayloads = reconstruct_array_sf((unsigned char **)packets, sizeof(packets)/sizeof(packets[0]), 
+//     //     reconstructed_array, sizeof(reconstructed_array) / sizeof(reconstructed_array[0]));
+    
+//     for(int j = 0; j < array_len; j++){
+//         array[j] = 0;
+//     }
+
+//     unsigned int numPayloads = reconstruct_array_sf(packets, packets_len, array, array_len);
+    
+//     // for(int i = 0; i < 3; i++){
+//     //     printf("\n");
+//     //     print_packet_sf(packets[i]);
+//     // }
+
+//     // printf("Num of Payloads: %u\n: ",numPayloads );
+//         for(int i = 0; i < array_len; i++ ){
+//             printf("Array[%d] is: %d\n ", i, array[i]);
+//         }
+
+//     return 0;
+// }
