@@ -22,13 +22,14 @@ void decomposeHeader(unsigned char packet[]);
 unsigned int getPacketLength(unsigned char packet[]);
 void print_packet_sf(unsigned char packet[]);
 unsigned int compute_checksum_sf(unsigned char packet[]);
-unsigned int getAbsoluteUsingTwosComp(int num);
+unsigned int getAbsoluteUsingTwosComp(int num); //This one's useless
+
 
 int getPayloadLength(unsigned char packet[]){
     int pktLen = (int) getPacketLength(packet); 
     int val = pktLen - 16;
-    // bleh = ((int) ((val) / 4)) + (val % 4 != 0)
-    return val / 4; 
+    val = val % 4 == 0 ?((int) ((val) / 4)) : (((int) ((val) / 4)) + (val % 4 != 0));
+    return val ; 
 }   
 
 unsigned int getPacketLength(unsigned char packet[]){
@@ -149,10 +150,9 @@ void decomposePayload(unsigned char packet[], int* payload){
     int pktLen = (int) getPacketLength(packet);
     int payLoadLength = getPayloadLength(packet);
   
-   
     if(payLoadLength != 0){
         int payloadIndex = 0, bitCount = 0;
-        for(int i = 16; i < pktLen; i++){ //tentative algorithm. POTENTIAL VULNERABILITIES (Not checking checksum or looking for corrupted data)  
+        for(int i = 16; i < pktLen; i++){ 
             temp |= packet[i];
             
             bitCount+=8; 
@@ -295,7 +295,7 @@ for(unsigned int i = 0; i < packets_len ; i++){
         pktlen = (16 + (remainingIntegers * 4));
         packetNum++; 
     }
-    else{ //beta
+    else{ 
         pktlen = (16 + (maxIntNum * 4));
         remainingIntegers -= maxIntNum;
         loaded = 1;
