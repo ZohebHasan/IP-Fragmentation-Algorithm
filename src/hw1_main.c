@@ -285,7 +285,7 @@ int byteCount = 0;
 unsigned int chckSum = 0;
 unsigned int fragOffset = 0;
 unsigned int index = 0;
-unsigned int pcktsLen = ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0));
+unsigned int packetsLen = ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0)) <= packets_len ? ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0)) : array_len;
 printf("packets_len is: %u\n" , packets_len);
 printf("pktsLen is: %u\n", pcktsLen);
 
