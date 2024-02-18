@@ -58,7 +58,7 @@ void decomposeHeader(unsigned char packet[]){
     unsigned int temp = 0; 
     int length = 16;
     
-    for(int i = 0; i < length; i++){  //what if the length is corrupted? gotta check pfft.
+    for(int i = 0; i < length; i++){  
         if( i < 4) { 
             temp |= (unsigned int) packet[i];            
             if( i == 3){
@@ -94,12 +94,11 @@ void decomposeHeader(unsigned char packet[]){
             destinationPort = temp;
             temp = 0;
         } 
-        else if(i < 10){ //needs recheck with different data 
+        else if(i < 10){ 
             temp |= (unsigned int) packet[i];
             if( i == 9){
                 temp >>= 2;
                 fragmentOffset = temp; 
-                // printf("Fragment Offset after decomposing: %u\n" , fragmentOffset);
                 temp = 0;
             }
             else{
@@ -285,7 +284,7 @@ unsigned int fragOffset = 0;
 unsigned int index = 0;
 
 
-for(int i = 0; i < (int) packets_len ; i++){
+for(unsigned int i = 0; i < packets_len ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
@@ -312,7 +311,7 @@ for(int i = 0; i < (int) packets_len ; i++){
             payloadShift = 24;        
             if(array[index] < 0){
                 chckSum += abs((int)array[index]);
-                // chckSum += getAbsoluteUsingTwosComp((int)array[index]);
+                // chckSum += getAbsoluteUsingTwosComp((int)array[index]); //My function is broken :(
             }
             else{
                 chckSum += array[index];

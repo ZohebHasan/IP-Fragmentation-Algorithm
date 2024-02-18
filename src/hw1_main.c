@@ -4,6 +4,7 @@
 
 
 
+
 //Global Variable Declarations 
 unsigned int sourceAddress; 
 unsigned int destinationAddress; 
@@ -59,7 +60,7 @@ void decomposeHeader(unsigned char packet[]){
     unsigned int temp = 0; 
     int length = 16;
     
-    for(int i = 0; i < length; i++){  //what if the length is corrupted? gotta check pfft.
+    for(int i = 0; i < length; i++){  
         if( i < 4) { 
             temp |= (unsigned int) packet[i];            
             if( i == 3){
@@ -95,12 +96,11 @@ void decomposeHeader(unsigned char packet[]){
             destinationPort = temp;
             temp = 0;
         } 
-        else if(i < 10){ //needs recheck with different data 
+        else if(i < 10){ 
             temp |= (unsigned int) packet[i];
             if( i == 9){
                 temp >>= 2;
                 fragmentOffset = temp; 
-                // printf("Fragment Offset after decomposing: %u\n" , fragmentOffset);
                 temp = 0;
             }
             else{
@@ -231,8 +231,6 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
             sum += (unsigned int) payload[i];
         }     
     }
-    // printf("Checksum is: %u\n", (sum % (unsigned int) 8388607));
-
     if( sum < 8388607){
         return sum;
     }
@@ -247,7 +245,6 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
     int payLoadLength;
     unsigned int j;
     int k;
-
 
     for(unsigned int i = 0; i < packets_len; i++){
         payLoadLength = getPayloadLength(packets[i]);
@@ -289,7 +286,7 @@ unsigned int fragOffset = 0;
 unsigned int index = 0;
 
 
-for(int i = 0; i < (int) packets_len ; i++){
+for(unsigned int i = 0; i < packets_len ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
@@ -316,7 +313,7 @@ for(int i = 0; i < (int) packets_len ; i++){
             payloadShift = 24;        
             if(array[index] < 0){
                 chckSum += abs((int)array[index]);
-                // chckSum += getAbsoluteUsingTwosComp((int)array[index]);
+                // chckSum += getAbsoluteUsingTwosComp((int)array[index]); //My function is broken :(
             }
             else{
                 chckSum += array[index];
@@ -397,45 +394,3 @@ for(int i = 0; i < (int) packets_len ; i++){
 }
     return packetNum; 
 }
-
-
-
-
-int main(){
-
-
-
-    
-    const char *packets[] = {
-    "\x00\x1e\x0f\x32\x0e\xf4\x86\xcd\x00\x80\x02\x07\x10\xd6\x41\x0f\x00\x00\x00\x12\x00\x00\x00\x13\x00\x00\x00\x14\x00\x00\x00\x15",
-    "\x00\x1e\x0f\x32\x0e\xf4\x86\xcd\x00\x40\x02\x07\x10\xd6\x21\x0f\x00\x00\x00\x0e\x00\x00\x00\x0f\x00\x00\x00\x10\x00\x00\x00\x11",
-    "\x00\x1e\x0f\x32\x0e\xf4\x86\xcd\x00\x00\x02\x07\x10\xd6\x01\x0f\x00\x00\x00\x0a\x00\x00\x00\x0b\x00\x00\x00\x0c\x00\x00\x00\x0d"};
-
-    // for(int i = 0; i < sizeof(packets)/sizeof(packets[0]); i++){
-    //     printf("\n");
-    //     print_packet_sf(packets[i]);
-    // }
-
-
-    int reconstructed_array[] = {675349907, 997962218, 2021193812, 340631633, 909996593, 1092143830, 790789736, 1741697497, 82837431, 1075282486, 2109128536, 962800887, };
-    int expected_array[] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, };
-    unsigned int expected_num_elements = 12;
-
-    printf("Payload Count: %u\n",  reconstruct_array_sf((unsigned char **)packets, sizeof(packets)/sizeof(packets[0]), 
-    reconstructed_array, sizeof(reconstructed_array) / sizeof(reconstructed_array[0])));
-    
-
-    printf("Elements in array:\n");
-    for(int i = 0; i < 12; i++){
-        printf(" %d ", reconstructed_array[i]);
-        printf("\n");
-    }
-
-
-    return 0;
-}
-
-
-
-
-
