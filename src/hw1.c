@@ -288,7 +288,7 @@ for(unsigned int i = 0; i < packets_len ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
-    if( remainingIntegers < maxIntNum && remainingIntegers > 0){
+    if( remainingIntegers <= maxIntNum && remainingIntegers > 0){
         pktlen = (16 + (remainingIntegers * 4));
         packetNum++; 
     }
