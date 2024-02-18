@@ -288,6 +288,7 @@ unsigned int index = 0;
 for(int i = 0; i < packets_len ; i++){
     chckSum = 0;
     pktlen = 0;
+    loaded = 0;
     if( remainingIntegers < maxIntNum){
         pktlen = (16 + (remainingIntegers * 4));
     }
@@ -359,9 +360,9 @@ for(int i = 0; i < packets_len ; i++){
             packets[i][j] |= (fragOffset >> 6);
         }
         else if(j == 9){
-            packets[i][j] |= (fragOffset << 2); 
+            packets[i][j] |= (fragOffset << 2);  //I am the problem;
             packets[i][j] |= ((pktlen) >> 12);  
-            // printf("Fragment Offset is: %u\n", fragOffset);  
+            printf("Fragment Offset is: %u\n", fragOffset);  
         }
         else if(j == 10){
             packets[i][j] |= ((pktlen) >> 4);  
@@ -399,31 +400,42 @@ for(int i = 0; i < packets_len ; i++){
 }
 
 int main (){
+    /**
+     * Expected:
+     * 00000000 00000010 10110110 01110000 00000000 01010110 11001110 11011110 
+     * 00000011 00000000 00000001 10001000 10000001 10100100 11000100 01101100 
+     * 00000000 01001001 00110111 01101011 
+     * 00000000 00110111 11101001 11110010
+     **/
 
+    /**
+     * Gotten:
+     * 00000000 00000010 10110110 01110000 00000000 01010110 11001110 11011110 
+     * 00000010 11000000 00000001 10001000 10000001 10100100 10110100 01101100 
+     * 00000000 01001001 00110111 01101011 
+     * 00000000 00110111 11101001 11110010
+
+    */
+
+    // printf("Expected: \n\n");
     // unsigned char expected[]={0x00, 0x02, 0xb6, 0x70, 0x00, 0x56, 0xce, 0xde, 
-    //                           0x01, 0x20, 0x02, 0x88, 0xfc, 0x65, 0x0b, 0x6c, 
-    //                           0xff, 0xf2, 0x1a, 0x14, 
-    //                           0xff, 0xe8, 0x6f, 0xb8, 
-    //                           0x00, 0x00, 0x14, 0x5b, 
-    //                           0xff, 0xcc, 0x0c, 0xa8, 
-    //                           0xff, 0xfb, 0x76, 0x27, 
-    //                           0x00, 0x1d, 0xda, 0x4d};
-    // printf("\n");
+    //                           0x03, 0x00, 0x01, 0x88, 0x81, 0xa4, 0xc4, 0x6c, 
+    //                           0x00, 0x49, 0x37, 0x6b, 
+    //                           0x00, 0x37, 0xe9, 0xf2};
+    
     // print_packet_sf(expected);
-    // unsigned char gotten[] ={ 0x0, 0x2, 0xb6, 0x70, 0x0, 0x56, 0xce, 0xde,
-    //                           0x0, 0x20, 0x2, 0x88, 0xfc, 0x65, 0xb, 0x6c,
-    //                           0xff, 0xf2, 0x1a, 0x14, 
-    //                           0xff, 0xe8, 0x6f, 0xb8, 
-    //                           0x00, 0x00, 0x14, 0x5b, 
-    //                           0xff, 0xcc, 0x0c, 0xa8, 
-    //                           0xff, 0xfb, 0x76, 0x27, 
-    //                           0x00, 0x1d, 0xda, 0x4d };
+
+    // printf("Gotten: \n\n");
+    // unsigned char gotten[] ={ 0x00, 0x02, 0xb6, 0x70, 0x00, 0x56, 0xce, 0xde, 
+    //                           0x02, 0xc0, 0x01, 0x88, 0x81, 0xa4, 0xb4, 0x6c, 
+    //                           0x00, 0x49, 0x37, 0x6b, 
+    //                           0x00, 0x37, 0xe9, 0xf2 };
 
     // print_packet_sf(gotten);
 
 
 
-    //TEST- 1
+    // TEST- 1
     int array[] = {-710617, 1930886, -3307223, -363085, 2747793, -761665, 4885386, 4760492, 1516649, 4641421, 
                     202362, -4509973, -1631310, -2479941, -102237, 2513926, 180540, -4616574, -910828, -1544264,
                     5211, -3404632, -297433, 1956429, 1465782, -3978470, 3722862, -1334877, 174067, 3703135, -3486071, 
@@ -447,11 +459,11 @@ int main (){
     
 
     
-    printf("\n");
-    for (int i = 0; i < num_expected_packets; i++){
-        printf("\n");
-        print_packet_sf(actual_packets[i]);
-    }
+    // printf("\n");
+    // for (int i = 0; i < num_expected_packets; i++){
+    //     printf("\n");
+    //     print_packet_sf(actual_packets[i]);
+    // }
    
     // //Decomposing the values:
     // printf("\nPacketized:\n");

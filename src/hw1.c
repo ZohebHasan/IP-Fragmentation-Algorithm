@@ -284,6 +284,7 @@ unsigned int index = 0;
 
 
 for(int i = 0; i < packets_len ; i++){
+    flag = 0;
     chckSum = 0;
     pktlen = 0;
     if( remainingIntegers < maxIntNum){
