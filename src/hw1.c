@@ -282,10 +282,10 @@ int byteCount = 0;
 unsigned int chckSum = 0;
 unsigned int fragOffset = 0;
 unsigned int index = 0;
-unsigned int pcktsLen = (array_len / maxIntNum) + ((array_len % maxIntNum) != 0);
+unsigned int pcktsLen = ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0));
 
 
-for(unsigned int i = 0; i < packets_len ; i++){
+for(unsigned int i = 0; i < pcktsLen ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;

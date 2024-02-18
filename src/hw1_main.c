@@ -273,6 +273,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
                           unsigned int src_port, unsigned int dest_port, unsigned int maximum_hop_count,
                           unsigned int compression_scheme, unsigned int traffic_class){
 
+
 unsigned int packetNum = 0; 
 // packets[packets_len];
 int maxIntNum =  (max_payload / 4); 
@@ -284,19 +285,24 @@ int byteCount = 0;
 unsigned int chckSum = 0;
 unsigned int fragOffset = 0;
 unsigned int index = 0;
+unsigned int pcktsLen = ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0));
+printf("packets_len is: %u\n" , packets_len);
+printf("pktsLen is: %u\n", pcktsLen);
 
 
-for(unsigned int i = 0; i < packets_len ; i++){
+for(unsigned int i = 0; i < pcktsLen ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
-    if( remainingIntegers < maxIntNum){
+    if( remainingIntegers <= maxIntNum && remainingIntegers > 0){ //beta
         pktlen = (16 + (remainingIntegers * 4));
+        packetNum++; 
     }
-    else{
+    else if(remainingIntegers > maxIntNum){ //beta
         pktlen = (16 + (maxIntNum * 4));
         remainingIntegers -= maxIntNum;
         loaded = 1;
+        packetNum++; 
     }
     packets[i] = malloc(pktlen);
     for(int x = 0; x < pktlen ; x++){
@@ -357,6 +363,7 @@ for(unsigned int i = 0; i < packets_len ; i++){
             }
             else{
                 fragOffset = ((index - remainingIntegers) * 4);
+                remainingIntegers = 0; 
             }
             packets[i][j] |= (fragOffset >> 6);
         }
@@ -390,7 +397,30 @@ for(unsigned int i = 0; i < packets_len ; i++){
             packets[i][j] |= ((compression_scheme) << 6);  
         }   
     }
-    packetNum++; 
+    
 }
     return packetNum; 
+}
+
+int main(){
+
+    int array[] = {-6, 823 }; //11 
+    unsigned char* actual_packets[4] = {0};
+    unsigned int num_expected_packets = 4;
+    unsigned int max_payload = 12;
+    unsigned int src_addr = 93737;
+    unsigned int dest_addr = 10973;
+    unsigned int src_port = 11;
+    unsigned int dest_port = 6;
+    unsigned int maximum_hop_count = 25;
+    unsigned int compression_scheme = 3;
+    unsigned int traffic_class = 14;
+
+
+
+    packetize_array_sf(array, sizeof(array) / sizeof(array[0]), actual_packets,
+			sizeof(actual_packets) / sizeof(actual_packets[0]), max_payload, src_addr, dest_addr, src_port, dest_port, 
+			maximum_hop_count, compression_scheme, traffic_class);
+
+    return 0;
 }
