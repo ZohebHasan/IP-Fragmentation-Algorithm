@@ -290,11 +290,13 @@ for(unsigned int i = 0; i < packets_len ; i++){
     pktlen = 0;
     if( remainingIntegers < maxIntNum){
         pktlen = (16 + (remainingIntegers * 4));
+        packetNum++; 
     }
     else{
         pktlen = (16 + (maxIntNum * 4));
         remainingIntegers -= maxIntNum;
         loaded = 1;
+        packetNum++; 
     }
     packets[i] = malloc(pktlen);
     for(int x = 0; x < pktlen ; x++){
@@ -388,7 +390,7 @@ for(unsigned int i = 0; i < packets_len ; i++){
             packets[i][j] |= ((compression_scheme) << 6);  
         }   
     }
-    packetNum++; 
+    
 }
     return packetNum; 
 }
