@@ -285,13 +285,13 @@ unsigned int index = 0;
 unsigned int pcktsLen = (array_len / maxIntNum) + ((array_len % maxIntNum) != 0);
 
 
-for(unsigned int i = 0; i < pcktsLen ; i++){
+for(unsigned int i = 0; i < packets_len ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
     if( remainingIntegers <= maxIntNum && remainingIntegers > 0){ //beta
         pktlen = (16 + (remainingIntegers * 4));
-       
+        remainingIntegers = 0; //beta
         packetNum++; 
     }
     else if(remainingIntegers > maxIntNum){ //beta
