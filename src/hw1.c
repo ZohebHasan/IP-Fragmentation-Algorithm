@@ -291,7 +291,6 @@ for(unsigned int i = 0; i < packets_len ; i++){
     pktlen = 0;
     if( remainingIntegers <= maxIntNum && remainingIntegers > 0){ //beta
         pktlen = (16 + (remainingIntegers * 4));
-
         packetNum++; 
     }
     else if(remainingIntegers > maxIntNum){ //beta
@@ -359,6 +358,7 @@ for(unsigned int i = 0; i < packets_len ; i++){
             }
             else{
                 fragOffset = ((index - remainingIntegers) * 4);
+                remainingIntegers = 0; 
             }
             packets[i][j] |= (fragOffset >> 6);
         }
