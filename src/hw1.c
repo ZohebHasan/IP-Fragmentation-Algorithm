@@ -1,6 +1,7 @@
 #include "hw1.h"
 
 
+
 //Global Variable Declarations 
 unsigned int sourceAddress; 
 unsigned int destinationAddress; 
@@ -56,26 +57,23 @@ void decomposeHeader(unsigned char packet[]){
     getPacketLength(packet);
     unsigned int temp = 0; 
     int length = 16;
-    
+   
     for(int i = 0; i < length; i++){  
         if( i < 4) { 
             temp |= (unsigned int) packet[i];            
             if( i == 3){
                 temp >>= 4;
                 sourceAddress = temp; 
-                temp = 0;           
+                temp = 0;        
+                temp |= (unsigned int) (packet[i] & 0x0f); 
+                temp <<= 8;    
             }
             else{
                 temp <<= 8;
             }     
         }
         else if( i < 7 ){  
-            if(i == 3){
-               temp |= (unsigned int) (packet[i] & 0x0f);   
-            }
-            else{
-                temp |= (unsigned int) packet[i];
-            }
+            temp |= (unsigned int) packet[i];
             if( i < 6){
                 temp <<= 8;
             }
@@ -112,7 +110,7 @@ void decomposeHeader(unsigned char packet[]){
                 temp |= (unsigned int) (packet[i] & 0x0f);
                 temp <<= 8;
             }
-            else{
+            else{ 
                 temp |= (unsigned int) (packet[i] & 0x80);
                 temp >>= 7; 
                 maxHopCount = temp;
@@ -122,8 +120,9 @@ void decomposeHeader(unsigned char packet[]){
             }
         }
         else if( i < 15){
+        
             temp |= (unsigned int) packet[i];                   
-            if( i == 14){     
+            if( i == 14){            
                 checkSum = temp;                
                 temp = 0;
             }
@@ -241,13 +240,14 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
     int payLoadLength;
     unsigned int j;
     int k;
-
+    
     for(unsigned int i = 0; i < packets_len; i++){
         payLoadLength = getPayloadLength(packets[i]);
         int payload[payLoadLength]; 
         decomposeHeader(packets[i]);
         decomposePayload (packets[i], payload);
-        if(compute_checksum_sf(packets[i]) == checkSum ){ //|| (compute_checksum_sf(packets[i]) + 4) == checkSum 
+
+        if(compute_checksum_sf(packets[i]) == checkSum ){ 
             j = (fragmentOffset / 4);
             k = 0;
             while(j < array_len && k < payLoadLength){
@@ -394,3 +394,4 @@ for(unsigned int i = 0; i < packets_len ; i++){
 }
     return packetNum; 
 }
+
