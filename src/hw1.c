@@ -1,8 +1,6 @@
 #include "hw1.h"
 
 
-
-
 //Global Variable Declarations 
 unsigned int sourceAddress; 
 unsigned int destinationAddress; 
@@ -249,7 +247,7 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
         int payload[payLoadLength]; 
         decomposeHeader(packets[i]);
         decomposePayload (packets[i], payload);
-        if(compute_checksum_sf(packets[i]) == checkSum || (compute_checksum_sf(packets[i]) + 4) == checkSum ){
+        if(compute_checksum_sf(packets[i]) == checkSum ){ //|| (compute_checksum_sf(packets[i]) + 4) == checkSum 
             j = (fragmentOffset / 4);
             k = 0;
             while(j < array_len && k < payLoadLength){
@@ -272,7 +270,6 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
                           unsigned int compression_scheme, unsigned int traffic_class){
 
 unsigned int packetNum = 0; 
-// packets[packets_len];
 int maxIntNum =  (max_payload / 4); 
 int remainingIntegers = array_len;
 int pktlen = 0; 
@@ -328,7 +325,6 @@ for(unsigned int i = 0; i < packets_len ; i++){
             payloadShift-= 8;
         }
     }
-
 
     shift = 20;
     for(int j = 0; j < 16; j++){ 
