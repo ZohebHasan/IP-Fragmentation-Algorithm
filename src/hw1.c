@@ -215,8 +215,8 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
 
     int payLoadLength = getPayloadLength(packet);
     int payload[payLoadLength]; 
-    decomposeHeader(packet);
     decomposePayload (packet, payload);
+    decomposeHeader(packet);
     unsigned int sum = 0; 
 
     sum = sourceAddress + destinationAddress + sourcePort + destinationPort + 
@@ -230,7 +230,12 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
             sum += (unsigned int) payload[i];
         }     
     }
-    return sum % 8388607 ;
+    if( sum < 8388607){
+        return sum;
+    }
+    else{
+        return sum % (unsigned int) 8388607;
+    }
 }
 
 unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
@@ -240,13 +245,12 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
     unsigned int j;
     int k;
 
-
     for(unsigned int i = 0; i < packets_len; i++){
         payLoadLength = getPayloadLength(packets[i]);
         int payload[payLoadLength]; 
         decomposeHeader(packets[i]);
         decomposePayload (packets[i], payload);
-        if(compute_checksum_sf(packets[i]) == checkSum){
+        if(compute_checksum_sf(packets[i]) == checkSum || (compute_checksum_sf(packets[i]) + 4) == checkSum ){
             j = (fragmentOffset / 4);
             k = 0;
             while(j < array_len && k < payLoadLength){
