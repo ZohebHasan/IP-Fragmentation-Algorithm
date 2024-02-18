@@ -282,21 +282,20 @@ int byteCount = 0;
 unsigned int chckSum = 0;
 unsigned int fragOffset = 0;
 unsigned int index = 0;
-// unsigned int packetsLen = ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0)) <= packets_len ? ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0)) : array_len; //Bad Idea :|
 
 
 for(unsigned int i = 0; i < packets_len ; i++){ 
-    if(remainingIntegers == 0){ //I am the problem
+    if(remainingIntegers == 0){ 
         return packetNum;
     }
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
-    if( remainingIntegers <= maxIntNum && remainingIntegers > 0){ //beta
+    if( remainingIntegers < maxIntNum ){ 
         pktlen = (16 + (remainingIntegers * 4));
         packetNum++; 
     }
-    else if(remainingIntegers > maxIntNum){ //beta
+    else{ //beta
         pktlen = (16 + (maxIntNum * 4));
         remainingIntegers -= maxIntNum;
         loaded = 1;
