@@ -1,6 +1,5 @@
 #include "hw1.h"
-// #include <stdio.h>
-// #include <stdlib.h>
+
 
 
 
@@ -100,6 +99,7 @@ void decomposeHeader(unsigned char packet[]){
             if( i == 9){
                 temp >>= 2;
                 fragmentOffset = temp; 
+                // printf("Fragment Offset after decomposing: %u\n" , fragmentOffset);
                 temp = 0;
             }
             else{
@@ -272,7 +272,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
 unsigned int packetNum = 0; 
 // packets[packets_len];
-int minIntNum = (max_payload / 4); 
+int maxIntNum =  (max_payload / 4); 
 int remainingIntegers = array_len;
 int pktlen = 0; 
 int shift, payloadShift;
@@ -286,12 +286,12 @@ unsigned int index = 0;
 for(int i = 0; i < packets_len ; i++){
     chckSum = 0;
     pktlen = 0;
-    if( remainingIntegers < minIntNum){
+    if( remainingIntegers < maxIntNum){
         pktlen = (16 + (remainingIntegers * 4));
     }
     else{
-        pktlen = (16 + (minIntNum * 4));
-        remainingIntegers -= minIntNum;
+        pktlen = (16 + (maxIntNum * 4));
+        remainingIntegers -= maxIntNum;
         loaded = 1;
     }
     packets[i] = malloc(pktlen);
@@ -324,7 +324,7 @@ for(int i = 0; i < packets_len ; i++){
 
 
     shift = 20;
-    for(int j = 0; j < pktlen; j++){
+    for(int j = 0; j < 16; j++){ 
         if(j < 4){
             if( j == 3){
                 packets[i][j] |= ((src_addr) << 4);
@@ -349,16 +349,16 @@ for(int i = 0; i < packets_len ; i++){
         }    
         else if(j == 8){
             if(loaded){
-                fragOffset = ((index - minIntNum) * 4);
+                fragOffset = ((index - maxIntNum) * 4);
             }
             else{
                 fragOffset = ((index - remainingIntegers) * 4);
             }
-            packets[i][j] |= (fragOffset >> 8 );
+            packets[i][j] |= (fragOffset >> 6);
         }
         else if(j == 9){
             packets[i][j] |= (fragOffset << 2); 
-            packets[i][j] |= ((pktlen) >> 12);    
+            packets[i][j] |= ((pktlen) >> 12);  
         }
         else if(j == 10){
             packets[i][j] |= ((pktlen) >> 4);  
@@ -384,11 +384,9 @@ for(int i = 0; i < packets_len ; i++){
             shift = 0; 
             packets[i][j] |= traffic_class;
             packets[i][j] |= ((compression_scheme) << 6);  
-        }       
+        }   
     }
     packetNum++; 
 }
     return packetNum; 
 }
-
-

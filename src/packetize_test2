@@ -1,0 +1,60 @@
+//TEST- 2
+
+    // int array[] = {-6, 823, 9, 1888, 0, -17, 9999999, -888888, 723, 1000, 1111}; //11 
+    // unsigned char* actual_packets[4] = {0};
+    // unsigned int num_expected_packets = 4;
+    // unsigned int max_payload = 12;
+    // unsigned int src_addr = 93737;
+    // unsigned int dest_addr = 10973;
+    // unsigned int src_port = 11;
+    // unsigned int dest_port = 6;
+    // unsigned int maximum_hop_count = 25;
+    // unsigned int compression_scheme = 3;
+    // unsigned int traffic_class = 14;
+
+
+
+    // packetize_array_sf(array, sizeof(array) / sizeof(array[0]), actual_packets,
+	// 		sizeof(actual_packets) / sizeof(actual_packets[0]), max_payload, src_addr, dest_addr, src_port, dest_port, 
+	// 		maximum_hop_count, compression_scheme, traffic_class);
+    
+    
+    // printf("\n");
+    // for (int i = 0; i < num_expected_packets; i++){
+    //     printf("\n");
+    //     print_packet_sf(actual_packets[i]);
+    // }
+
+
+
+    // unsigned char expectedPacket2[] = {0x00, 0x16, 0xe2, 0x90, 0x00, 0x2a, 0xdd, 0xb6, 
+    //                                    0x00, 0x80, 0x01, 0x8c, 0x81, 0xa1, 0xb8, 0xce, 
+    //                                    0x00, 0x00, 0x03, 0xe8, 
+    //                                    0x00, 0x00, 0x04, 0x57};
+
+    // //Decomposing the values:
+    // printf("\nPacketized:\n");
+    // print_packet_sf(actual_packets[3]);
+
+    // printf("\nExpected: \n");
+    // print_packet_sf(expectedPacket2); 
+
+    // printf("\n\n");
+
+    // //Printing hex values:
+    // printf("Expected Hex\n");
+    // for(int i = 0; i < (sizeof(expectedPacket2) / sizeof(expectedPacket2[0])) ; i++){
+    //     printf("%x", expectedPacket2[i]);
+    // }
+    // printf("\n");
+    // printf("Packetized Hex\n");
+    // for(int i = 0; i < getPacketLength(actual_packets[3]) ; i++){
+    //     printf("%x", actual_packets[3][i]);
+    // }
+    // printf("\n");
+
+
+    
+    // for (unsigned int i = 0; i < num_expected_packets; i++)
+    //     free(actual_packets[i]);
+    // return 0;
