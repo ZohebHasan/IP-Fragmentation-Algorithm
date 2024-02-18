@@ -16,7 +16,7 @@ unsigned int compressionScheme;
 unsigned int trafficClass;
 
 //Function Prototypes
-void decomposePayload(unsigned char packet[], int* payload, int payloadLength);
+void decomposePayload(unsigned char packet[], int* getPayloadLength);
 int getPayloadLength(unsigned char packet[]);
 void decomposeHeader(unsigned char packet[]);
 unsigned int getPacketLength(unsigned char packet[]);
@@ -145,7 +145,7 @@ void decomposeHeader(unsigned char packet[]){
     }
  }
 
-void decomposePayload(unsigned char packet[], int* payload, int payloadLength){
+void decomposePayload(unsigned char packet[], int* payload){
     unsigned int temp = 0; 
     int pktLen = (int) getPacketLength(packet);
     int payLoadLength = getPayloadLength(packet);
@@ -172,11 +172,10 @@ void decomposePayload(unsigned char packet[], int* payload, int payloadLength){
 
 void print_packet_sf(unsigned char packet[]){
 
-    int pktLen = (int) getPacketLength(packet);
     int payLoadLength = getPayloadLength(packet);
     int payload[payLoadLength]; 
     decomposeHeader(packet);
-    decomposePayload (packet, payload, payLoadLength);
+    decomposePayload (packet, payload);
 
     printf("Source Address: %u\n", sourceAddress);
     printf("Destination Address: %u\n", destinationAddress); 
@@ -213,11 +212,11 @@ unsigned int getAbsoluteUsingTwosComp(int num){//This function is as useful as O
 }
 
 unsigned int compute_checksum_sf(unsigned char packet[]){
-    int pktLen = (int) getPacketLength(packet);
+
     int payLoadLength = getPayloadLength(packet);
     int payload[payLoadLength]; 
     decomposeHeader(packet);
-    decomposePayload (packet, payload, payLoadLength);
+    decomposePayload (packet, payload);
     unsigned int sum = 0; 
 
     sum = sourceAddress + destinationAddress + sourcePort + destinationPort + 
@@ -237,17 +236,16 @@ unsigned int compute_checksum_sf(unsigned char packet[]){
 unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
 
     unsigned int payloadCount = 0;
-    int pktLen, payLoadLength;
+    int payLoadLength;
     unsigned int j;
     int k;
 
 
     for(unsigned int i = 0; i < packets_len; i++){
-        pktLen = (int) getPacketLength(packets[i]);
         payLoadLength = getPayloadLength(packets[i]);
         int payload[payLoadLength]; 
         decomposeHeader(packets[i]);
-        decomposePayload (packets[i], payload, payLoadLength);
+        decomposePayload (packets[i], payload);
         if(compute_checksum_sf(packets[i]) == checkSum){
             j = (fragmentOffset / 4);
             k = 0;
@@ -283,7 +281,7 @@ unsigned int fragOffset = 0;
 unsigned int index = 0;
 
 
-for(int i = 0; i < packets_len ; i++){
+for(int i = 0; i < (int) packets_len ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;

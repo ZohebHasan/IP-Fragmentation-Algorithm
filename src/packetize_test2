@@ -58,3 +58,93 @@
     // for (unsigned int i = 0; i < num_expected_packets; i++)
     //     free(actual_packets[i]);
     // return 0;
+     /**
+     * Expected:
+     * 00000000 00000010 10110110 01110000 00000000 01010110 11001110 11011110 
+     * 00000011 00000000 00000001 10001000 10000001 10100100 11000100 01101100 
+     * 00000000 01001001 00110111 01101011 
+     * 00000000 00110111 11101001 11110010
+     **/
+
+    /**
+     * Gotten:
+     * 00000000 00000010 10110110 01110000 00000000 01010110 11001110 11011110 
+     * 00000010 11000000 00000001 10001000 10000001 10100100 10110100 01101100 
+     * 00000000 01001001 00110111 01101011 
+     * 00000000 00110111 11101001 11110010
+
+    */
+
+    // printf("Expected: \n\n");
+    // unsigned char expected[]={0x00, 0x02, 0xb6, 0x70, 0x00, 0x56, 0xce, 0xde, 
+    //                           0x03, 0x00, 0x01, 0x88, 0x81, 0xa4, 0xc4, 0x6c, 
+    //                           0x00, 0x49, 0x37, 0x6b, 
+    //                           0x00, 0x37, 0xe9, 0xf2};
+    
+    // print_packet_sf(expected);
+
+    // printf("Gotten: \n\n");
+    // unsigned char gotten[] ={ 0x00, 0x02, 0xb6, 0x70, 0x00, 0x56, 0xce, 0xde, 
+    //                           0x02, 0xc0, 0x01, 0x88, 0x81, 0xa4, 0xb4, 0x6c, 
+    //                           0x00, 0x49, 0x37, 0x6b, 
+    //                           0x00, 0x37, 0xe9, 0xf2 };
+
+    // print_packet_sf(gotten);
+
+
+
+    // TEST- 1
+    // int array[] = {-710617, 1930886, -3307223, -363085, 2747793, -761665, 4885386, 4760492, 1516649, 4641421, 
+    //                 202362, -4509973, -1631310, -2479941, -102237, 2513926, 180540, -4616574, -910828, -1544264,
+    //                 5211, -3404632, -297433, 1956429, 1465782, -3978470, 3722862, -1334877, 174067, 3703135, -3486071, 
+    //                 -3020198, 634022, 723058, 4133069, 898167, 4961393, 4018456, 3175011, 1478042, -3823771, -1622627, 
+    //                 4484421, -455081, 3413784, 1898537, -424802, -1405676, 4798315, 3664370, };
+    // unsigned char* actual_packets[9] = {0};
+    // unsigned int num_expected_packets = 9;
+    // unsigned int max_payload = 24;
+    // unsigned int src_addr = 11111;
+    // unsigned int dest_addr = 22222;
+    // unsigned int src_port = 13;
+    // unsigned int dest_port = 14;
+    // unsigned int maximum_hop_count = 17;
+    // unsigned int compression_scheme = 1;
+    // unsigned int traffic_class = 44;
+
+
+    // printf("Total Packets: %d\n", packetize_array_sf(array, sizeof(array) / sizeof(array[0]), actual_packets,
+	// 		sizeof(actual_packets) / sizeof(actual_packets[0]), max_payload, src_addr, dest_addr, src_port, dest_port, 
+	// 		maximum_hop_count, compression_scheme, traffic_class));
+    
+
+    
+    // printf("\n");
+    // for (int i = 0; i < num_expected_packets; i++){
+    //     printf("\n");
+    //     print_packet_sf(actual_packets[i]);
+    // }
+   
+    // //Decomposing the values:
+    // printf("\nPacketized:\n");
+    // print_packet_sf(actual_packets[3]);
+
+    // printf("\nExpected: \n");
+    // print_packet_sf(expectedPacket2); 
+
+    // printf("\n\n");
+
+    // //Printing hex values:
+    // printf("Expected Hex\n");
+    // for(int i = 0; i < (sizeof(expectedPacket2) / sizeof(expectedPacket2[0])) ; i++){
+    //     printf("%x", expectedPacket2[i]);
+    // }
+    // printf("\n");
+    // printf("Packetized Hex\n");
+    // for(int i = 0; i < getPacketLength(actual_packets[3]) ; i++){
+    //     printf("%x", actual_packets[3][i]);
+    // }
+    // printf("\n");
+
+
+    
+    // for (unsigned int i = 0; i < num_expected_packets; i++)
+    //     free(actual_packets[i]);
