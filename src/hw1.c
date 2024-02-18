@@ -288,11 +288,12 @@ for(unsigned int i = 0; i < packets_len ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
-    if( remainingIntegers <= maxIntNum && remainingIntegers > 0){
+    if( remainingIntegers <= maxIntNum && remainingIntegers > 0){ //beta
         pktlen = (16 + (remainingIntegers * 4));
+        remainingIntegers = 0; //beta
         packetNum++; 
     }
-    else if(remainingIntegers > maxIntNum){
+    else if(remainingIntegers > maxIntNum){ //beta
         pktlen = (16 + (maxIntNum * 4));
         remainingIntegers -= maxIntNum;
         loaded = 1;
