@@ -292,7 +292,7 @@ for(unsigned int i = 0; i < packets_len ; i++){
         pktlen = (16 + (remainingIntegers * 4));
         packetNum++; 
     }
-    else{
+    else if(remainingIntegers > maxIntNum){
         pktlen = (16 + (maxIntNum * 4));
         remainingIntegers -= maxIntNum;
         loaded = 1;
