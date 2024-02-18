@@ -285,7 +285,7 @@ unsigned int index = 0;
 unsigned int packetsLen = ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0)) <= packets_len ? ((array_len / maxIntNum) + ((array_len % maxIntNum) != 0)) : array_len;
 
 
-for(unsigned int i = 0; i < packets_len ; i++){
+for(unsigned int i = 0; i < packetsLen ; i++){
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
