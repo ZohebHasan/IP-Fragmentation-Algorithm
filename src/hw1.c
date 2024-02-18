@@ -286,9 +286,9 @@ unsigned int index = 0;
 
 
 for(unsigned int i = 0; i < packets_len ; i++){ 
-    if(remainingIntegers == 0){
-        return packetNum;
-    }
+    // if(remainingIntegers == 0){ //I am the problem
+    //     return packetNum;
+    // }
     loaded = 0;
     chckSum = 0;
     pktlen = 0;
